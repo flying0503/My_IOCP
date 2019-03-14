@@ -1,0 +1,29 @@
+AcceptEx函数的定义如下：
+
+BOOL AcceptEx ( 
+  SOCKET sListenSocket,      
+  SOCKET sAcceptSocket,      
+  PVOID lpOutputBuffer,      
+  DWORD dwReceiveDataLength,  
+  DWORD dwLocalAddressLength,  
+  DWORD dwRemoteAddressLength,  
+  LPDWORD lpdwBytesReceived,  
+  LPOVERLAPPED lpOverlapped  
+);
+
+参数1--sListenSocket, accept前绑定到本地地址的监听socket，一般由listen()得到
+参数2--sAcceptSocket, 用于接受连接的socket，本人理解应该更主要是的一个out参数。
+参数3--lpOutputBuffer,一块内存，当Accept成功时，会有本地(server)的地址信息，
+       远端地址信息(client)，可能还有数据(当dwReceiveDataLength!=0时)将得到。此参数将存放这
+ 3种信息，其中，它们是这样存放的：开始dwReceiveDataLength个大小，用于存放Accept时接到
+ 到的数据，后面接着存放server的地址，接着是client的地址信息。该参数比较重要，如果使用
+ 不当，可能会引起内存溢出。
+参数4--dwReceiveDataLength，lpOutputBuffer中用于存放数据的空间大小。如果此参数=0，则Accept时
+ 将不会待数据到来，而直接返回，所以通常当Accept有数据时，该参数设成为：
+ sizeof(lpOutputBuffer)(实参的实际空间大小) - 2*(sizeof sockaddr_in +16)。
+
+参数5--dwLocalAddressLength，存放本地址地址信息的空间大小
+参数6--dwRemoteAddressLength，存放本远端地址信息的空间大小
+参数7--lpdwBytesReceived，out参数，用于存放接收到的数据长度。该参数只是在同步IO的时候会有效
+ 返回，如果是异步的重叠IO，需从完成通知信息里面得到。(详见MSDN)
+参数8--lpOverlapped，标识异步操作时的重叠IO结构信息。
