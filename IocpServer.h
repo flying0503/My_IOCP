@@ -3,8 +3,9 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #include <io.h>
-#include<thread>
-#include<iostream>
+#include <thread>
+#include <iostream>
+#include <MSWSock.h>
 #pragma comment(lib,"ws2_32.lib")
 
 class IocpServer
@@ -31,9 +32,10 @@ public:
 	void Run(const char* IP, unsigned short port, unsigned int nListen);//启动
 
 public:
-	bool _wsa_inited;			//无效标志位
-	HANDLE _completion_port;	//完成端口句柄
-	SOCKET _socket;				//套接字结构体
+	bool _wsa_inited;				//无效标志位
+	HANDLE _completion_port;		//完成端口句柄
+	SOCKET _socket;					//套接字结构体
+	LPFN_ACCEPTEX _acceptex_func;	//函数地址
 };
 
 #endif

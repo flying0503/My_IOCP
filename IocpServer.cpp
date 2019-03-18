@@ -1,9 +1,10 @@
 #include "IocpServer.h"
 #include <WinSock2.h>
 #include <mswsock.h>
-#include<WS2tcpip.h>
 #include "overlapped.h"
 #include <memory>
+#include "Work.h"
+
 #pragma warning(disable:4996)
 
 IocpServer::IocpServer()
@@ -20,6 +21,7 @@ IocpServer::~IocpServer()
 #pragma pack(push) //保存对齐状态
 #pragma pack(1)//设定为4字节对齐
 
+#if 0
 typedef struct acceptex_sockaddr_in {
     CHAR b_zero[10];
     sockaddr_in addr_in;
@@ -33,6 +35,7 @@ inline void log_sockaddr_in(const char* tag,sockaddr_in* addr)//地址转换封装
     inet_ntop(AF_INET, &addr->sin_addr, ip_addr, sizeof(ip_addr));	 //将点分十进制的ip地址转化为用于网络传输的数值格式
     fprintf(stdout, "%s ---- %s:%d\n", tag, ip_addr, ntohs(addr->sin_port));
 }
+#endif // 已经移动到Work线程中
 
 int IocpServer::WinSockInit()
 {
@@ -107,27 +110,28 @@ int IocpServer::Accept()
 {
 	int ret = -1;
 	do{
-
+#if 0
 		//这里我们不用WSAAccept，
 		//因为我们需在查询完成端口的时候判断出，是accept、read、connect和write类型
 
-		
+
 		LPFN_ACCEPTEX _acceptex_func;			//存放AcceptEx函数的指针
 		GUID acceptex_guid = WSAID_ACCEPTEX;	//全局标识符
 		DWORD bytes_returned;
 		ret = WSAIoctl							//WSAIoctl获取acceptex的函数地址，设置控制参数
-			(
+		(
 			_socket, SIO_GET_EXTENSION_FUNCTION_POINTER,
 			&acceptex_guid, sizeof(acceptex_guid),
 			&_acceptex_func, sizeof(_acceptex_func),
 			&bytes_returned, NULL, NULL
-			);
+		);
 		if (ret != 0)
 		{
 			ret = -1;
 			fprintf(stderr, "获取AcceptEx 函数地址失败\n");
 			break;
 		}
+#endif // 函数地址在Work线程只获取一次
 
 		//接受套接字，ipv4，流，tcp协议
 		SOCKET accepted_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);	
@@ -166,7 +170,7 @@ int IocpServer::Accept()
 		}
 
 		// 将accept_socket关联到完成端口
-		CreateIoCompletionPort((HANDLE)accepted_socket, _completion_port, 0, 0);
+		CreateIoCompletionPort(reinterpret_cast<HANDLE>(accepted_socket), _completion_port, 0, 0);
 
 		accept_overlapped.release();	//释放端口
 	} while (0);
@@ -201,8 +205,13 @@ int IocpServer::Init(const char* IP, unsigned short port, unsigned int nListen)
 		if ((ret = Listen(nListen)) == -1)					//监听启动
 			break;
 
-		if (Accept() == -1)									//接受连接
-			break;
+		//获取acceptex函数地址，只用获取一次
+		SocketExFnsHunter _socketExFnsHunter;
+		_acceptex_func = _socketExFnsHunter.AcceptEx;
+
+		Work *_workers = new Work(this);
+		_workers->Start();
+
 	} while (0);
 	return ret;
 
@@ -210,6 +219,7 @@ int IocpServer::Init(const char* IP, unsigned short port, unsigned int nListen)
 
 void IocpServer::Mainloop()
 {
+	#if 0
 	DWORD bytes_transferred;
 	ULONG_PTR completion_key;
 	DWORD Flags = 0;
@@ -240,7 +250,12 @@ void IocpServer::Mainloop()
 		}
 
 	}
+	#endif//原主线程
 
+	//主线程空闲。
+	std::cout << "主线程空闲" << std::endl;
+	while (1)
+	{}
 }
 
 void IocpServer::Run(const char* ip, unsigned short port, unsigned int nListen = 5)

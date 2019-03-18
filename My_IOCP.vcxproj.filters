@@ -21,12 +21,21 @@
     <ClInclude Include="overlapped.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Work.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketExFnsHunter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IocpServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Work.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
