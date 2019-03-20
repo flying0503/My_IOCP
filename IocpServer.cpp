@@ -143,11 +143,12 @@ int IocpServer::Accept()
 		}
 
 		//这里设置Overlapped类型，到时查询完成端口的时候可以区别类型
+		//Overlapped *accept_overlapped(new Overlapped);
 		std::unique_ptr<Overlapped> accept_overlapped(new Overlapped);//unique_ptr智能指针
-		memset(accept_overlapped.get(), 0, sizeof(Overlapped));		  //将结构体指针位置初始化
+		memset(accept_overlapped.get(), 0, sizeof(Overlapped));				//将结构体指针位置初始化
 		accept_overlapped->type = Overlapped::Accept_type;			  //设置位接受类型
 
-		DWORD bytes = 0;
+		DWORD bytes = 0; 
 
 		//调用acceptex函数，结果保存在accept_ex_result中
 		const int accept_ex_result = _acceptex_func
@@ -209,6 +210,7 @@ int IocpServer::Init(const char* IP, unsigned short port, unsigned int nListen)
 		SocketExFnsHunter _socketExFnsHunter;
 		_acceptex_func = _socketExFnsHunter.AcceptEx;
 
+		//建立工作者线程WorkThread
 		Work *_workers = new Work(this);
 		_workers->Start();
 

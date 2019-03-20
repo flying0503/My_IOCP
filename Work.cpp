@@ -61,6 +61,7 @@ void Work::Start()
 		//关闭线程句柄
 		CloseHandle(ThreadHandle);
 	}
+	_iocpServer->Accept();
 }
 
 void Work::ThreadProc()
@@ -70,15 +71,14 @@ void Work::ThreadProc()
 	DWORD Flags = 0;
 	Overlapped* overlapped = nullptr;
 
-	//获取连接队列
-	BOOL bRet = GetQueuedCompletionStatus(_iocpServer->_completion_port,		
-		&bytes_transferred,
-		&completion_key,
-		reinterpret_cast<LPOVERLAPPED*>(&overlapped),					//新特性强制类型转换
-		INFINITE);
-
 	while (1)
 	{
+		//获取连接队列
+		BOOL bRet = GetQueuedCompletionStatus(_iocpServer->_completion_port,
+			&bytes_transferred,
+			&completion_key,
+			reinterpret_cast<LPOVERLAPPED*>(&overlapped),					//新特性强制类型转换
+			INFINITE);
 		if (bRet)
 		{
 			if (overlapped->type == Overlapped::Accept_type)

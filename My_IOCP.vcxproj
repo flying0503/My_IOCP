@@ -78,12 +78,12 @@
     <IntDir>..\bin\$(SolutionName)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\bin\$(SolutionName)\$(Configuration)\$(Platform)</OutDir>
-    <IntDir>..\bin\$(SolutionName)\$(Configuration)\$(Platform)</IntDir>
+    <OutDir>..\bin\$(ProjectName)\$(Configuration)\$(Platform)</OutDir>
+    <IntDir>..\bin\$(ProjectName)\$(Configuration)\$(Platform)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\bin\$(SolutionName)\$(Configuration)\$(Platform)</OutDir>
-    <IntDir>..\bin\$(SolutionName)\$(Configuration)\$(Platform)</IntDir>
+    <OutDir>..\bin\$(ProjectName)\$(Configuration)\$(Platform)</OutDir>
+    <IntDir>..\bin\$(ProjectName)\$(Configuration)\$(Platform)</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
