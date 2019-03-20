@@ -1,4 +1,4 @@
-#ifndef _IocpServer_h_
+ï»¿#ifndef _IocpServer_h_
 #define _IocpServer_h_
 #include <WinSock2.h>
 #include <Windows.h>
@@ -15,27 +15,27 @@ public:
 	~IocpServer();
 
 public:
-	int Init(const char* IP, unsigned short port,unsigned int nListen);//nListenÖ¸×î´ó½ÓÊÜµÈ´ıÊı
+	int Init(const char* IP, unsigned short port,unsigned int nListen);//nListenæŒ‡æœ€å¤§æ¥å—ç­‰å¾…æ•°
 
-	int WinSockInit();	//°æ±¾³õÊ¼»¯
+	int WinSockInit();	//ç‰ˆæœ¬åˆå§‹åŒ–
 
-	int InitSocket();	//Ì×½Ó×Ö³õÊ¼»¯
+	int InitSocket();	//å¥—æ¥å­—åˆå§‹åŒ–
 
-	int Bind(const char* IP,unsigned short port);	//°ó¶¨º¯Êı
+	int Bind(const char* IP,unsigned short port);	//ç»‘å®šå‡½æ•°
 	
-	int Listen(unsigned int nListen);	//¼àÌıº¯Êı
+	int Listen(unsigned int nListen);	//ç›‘å¬å‡½æ•°
 	
-	int Accept();		//½ÓÊÜº¯Êı
+	int Accept();		//æ¥å—å‡½æ•°
 
-	void Mainloop();	//Ö÷Ñ­»·
+	void Mainloop();	//ä¸»å¾ªç¯
 
-	void Run(const char* IP, unsigned short port, unsigned int nListen);//Æô¶¯
+	void Run(const char* IP, unsigned short port, unsigned int nListen);//å¯åŠ¨
 
 public:
-	bool _wsa_inited;				//ÎŞĞ§±êÖ¾Î»
-	HANDLE _completion_port;		//Íê³É¶Ë¿Ú¾ä±ú
-	SOCKET _socket;					//Ì×½Ó×Ö½á¹¹Ìå
-	LPFN_ACCEPTEX _acceptex_func;	//º¯ÊıµØÖ·
+	bool _wsa_inited;				//æ— æ•ˆæ ‡å¿—ä½
+	HANDLE _completion_port;		//å®Œæˆç«¯å£å¥æŸ„
+	SOCKET _socket;					//å¥—æ¥å­—ç»“æ„ä½“
+	LPFN_ACCEPTEX _acceptex_func;	//å‡½æ•°åœ°å€
 };
 
 #endif

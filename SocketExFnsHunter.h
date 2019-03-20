@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <WinSock2.h>
 #include <Windows.h>
 #include <MSWSock.h>
@@ -11,9 +11,9 @@ class SocketExFnsHunter
 {
 public:
     SocketExFnsHunter(){ Hunt(); }
-    AcceptExPtr AcceptEx;							//º¯ÊıÖ¸Õë
-    ConnectExPtr ConnectEx;							//º¯ÊıÖ¸Õë
-    GetAcceptExSockaddrsPtr GetAcceptExSockaddrs;	//º¯ÊıÖ¸Õë
+    AcceptExPtr AcceptEx;							//å‡½æ•°æŒ‡é’ˆ
+    ConnectExPtr ConnectEx;							//å‡½æ•°æŒ‡é’ˆ
+    GetAcceptExSockaddrsPtr GetAcceptExSockaddrs;	//å‡½æ•°æŒ‡é’ˆ
 
 private:
 
@@ -24,9 +24,9 @@ private:
             return;
 
 		
-        const GUID acceptex = WSAID_ACCEPTEX;			//AcceptExº¯ÊıÖ¸Õë
+        const GUID acceptex = WSAID_ACCEPTEX;			//AcceptExå‡½æ•°æŒ‡é’ˆ
         AcceptEx = (AcceptExPtr)get_extension_function(Socket, &acceptex);
-        const GUID connectex = WSAID_CONNECTEX;			// GUID£¬Õâ¸öÊÇÊ¶±ğAcceptExº¯Êı±ØĞëµÄÈ«¾Ö±äÁ¿
+        const GUID connectex = WSAID_CONNECTEX;			// GUIDï¼Œè¿™ä¸ªæ˜¯è¯†åˆ«AcceptExå‡½æ•°å¿…é¡»çš„å…¨å±€å˜é‡
         ConnectEx = (ConnectExPtr)get_extension_function(Socket, &connectex);
         const GUID getacceptexsockaddrs = WSAID_GETACCEPTEXSOCKADDRS;
         GetAcceptExSockaddrs = (GetAcceptExSockaddrsPtr)get_extension_function(Socket, &getacceptexsockaddrs);
@@ -38,7 +38,7 @@ private:
     {
         void *ptr = NULL;
         DWORD bytes = 0;
-        WSAIoctl(s, SIO_GET_EXTENSION_FUNCTION_POINTER,			//¿ØÖÆ¶Ë¿ÚÄ£Ê½
+        WSAIoctl(s, SIO_GET_EXTENSION_FUNCTION_POINTER,			//æ§åˆ¶ç«¯å£æ¨¡å¼
             (GUID*)which_fn, sizeof(*which_fn),
             &ptr, sizeof(ptr),
             &bytes, NULL, NULL);

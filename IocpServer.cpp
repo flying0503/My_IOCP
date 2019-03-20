@@ -1,4 +1,4 @@
-#include "IocpServer.h"
+ï»¿#include "IocpServer.h"
 #include <WinSock2.h>
 #include <mswsock.h>
 #include "overlapped.h"
@@ -18,8 +18,8 @@ IocpServer::~IocpServer()
 {
 }
 
-#pragma pack(push) //±£´æ¶ÔÆë×´Ì¬
-#pragma pack(1)//Éè¶¨Îª4×Ö½Ú¶ÔÆë
+#pragma pack(push) //ä¿å­˜å¯¹é½çŠ¶æ€
+#pragma pack(1)//è®¾å®šä¸º4å­—èŠ‚å¯¹é½
 
 #if 0
 typedef struct acceptex_sockaddr_in {
@@ -27,29 +27,29 @@ typedef struct acceptex_sockaddr_in {
     sockaddr_in addr_in;
     CHAR e_zero[2];
 }acceptex_sockaddr_in;
-#pragma pack(pop)//»Ö¸´¶ÔÆë×´Ì¬
+#pragma pack(pop)//æ¢å¤å¯¹é½çŠ¶æ€
 
-inline void log_sockaddr_in(const char* tag,sockaddr_in* addr)//µØÖ·×ª»»·â×°
+inline void log_sockaddr_in(const char* tag,sockaddr_in* addr)//åœ°å€è½¬æ¢å°è£…
 {
     char ip_addr[30];
-    inet_ntop(AF_INET, &addr->sin_addr, ip_addr, sizeof(ip_addr));	 //½«µã·ÖÊ®½øÖÆµÄipµØÖ·×ª»¯ÎªÓÃÓÚÍøÂç´«ÊäµÄÊıÖµ¸ñÊ½
+    inet_ntop(AF_INET, &addr->sin_addr, ip_addr, sizeof(ip_addr));	 //å°†ç‚¹åˆ†åè¿›åˆ¶çš„ipåœ°å€è½¬åŒ–ä¸ºç”¨äºç½‘ç»œä¼ è¾“çš„æ•°å€¼æ ¼å¼
     fprintf(stdout, "%s ---- %s:%d\n", tag, ip_addr, ntohs(addr->sin_port));
 }
-#endif // ÒÑ¾­ÒÆ¶¯µ½WorkÏß³ÌÖĞ
+#endif // å·²ç»ç§»åŠ¨åˆ°Workçº¿ç¨‹ä¸­
 
 int IocpServer::WinSockInit()
 {
 	int ret = -1;
 	do
 	{
-		WORD version = MAKEWORD(2, 2);		//°æ±¾
+		WORD version = MAKEWORD(2, 2);		//ç‰ˆæœ¬
 		WSADATA wsaData;
-		_wsa_inited = !WSAStartup(version, &wsaData);		//°æ±¾Æô¶¯
+		_wsa_inited = !WSAStartup(version, &wsaData);		//ç‰ˆæœ¬å¯åŠ¨
 		if (!_wsa_inited)
 			break;
-		if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2)	//¸ß°æ±¾¡¢µÍ°æ±¾
+		if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2)	//é«˜ç‰ˆæœ¬ã€ä½ç‰ˆæœ¬
 		{
-			WSACleanup();					//ÇåÀíº¯Êı
+			WSACleanup();					//æ¸…ç†å‡½æ•°
 			_wsa_inited = false;
 			break;
 		}
@@ -63,19 +63,19 @@ int IocpServer::InitSocket()
 	int ret = 0;
 	do
 	{
-		//´´½¨·şÎñÆ÷Ì×½Ó×Ö£¬ÕâÀïÒª×¢ÒâµÄÊÇ×îºóÒ»¸ö²ÎÊı±ØĞëÎª£ºWSA_FLAG_OVERLAPPEDÖØµşÄ£Ê½
-		//WSASocket×¨ÃÅÓÃÓÚwindows±à³Ì£¬¿ÉÒÔÊ¹ÓÃÖØµşÄ£Ê½
+		//åˆ›å»ºæœåŠ¡å™¨å¥—æ¥å­—ï¼Œè¿™é‡Œè¦æ³¨æ„çš„æ˜¯æœ€åä¸€ä¸ªå‚æ•°å¿…é¡»ä¸ºï¼šWSA_FLAG_OVERLAPPEDé‡å æ¨¡å¼
+		//WSASocketä¸“é—¨ç”¨äºwindowsç¼–ç¨‹ï¼Œå¯ä»¥ä½¿ç”¨é‡å æ¨¡å¼
 		_socket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 		if (_socket == INVALID_SOCKET)
 		{
-			fprintf(stderr, "´´½¨ WSASocket( listenSocket )Ê§°Ü\n");
+			fprintf(stderr, "åˆ›å»º WSASocket( listenSocket )å¤±è´¥\n");
 			ret = -1;
 			break;
 		}
-		//´Ë´¦CreateIoCompletionPortÓÃÓÚ¹ØÁª
+		//æ­¤å¤„CreateIoCompletionPortç”¨äºå…³è”
 		if (!CreateIoCompletionPort((HANDLE)_socket, _completion_port, 0, 0))
 		{
-			fprintf(stderr, "½«listen socket¹ØÁªµ½Íê³É¶Ë¿ÚÊ§°Ü\n");
+			fprintf(stderr, "å°†listen socketå…³è”åˆ°å®Œæˆç«¯å£å¤±è´¥\n");
 			ret = -1;
 		}
 	} while (0);
@@ -88,9 +88,9 @@ int IocpServer::Bind(const char* IP, unsigned short port)
 	addr.sin_addr.S_un.S_addr = inet_addr(IP);
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
-	if (bind(_socket, (LPSOCKADDR)&addr, sizeof(SOCKADDR)) == SOCKET_ERROR)	//°ó¶¨
+	if (bind(_socket, (LPSOCKADDR)&addr, sizeof(SOCKADDR)) == SOCKET_ERROR)	//ç»‘å®š
 	{
-		std::cout << " WSASocket( bind ) Ê§°Ü. ´íÎóÂë:" << GetLastError() << std::endl;
+		std::cout << " WSASocket( bind ) å¤±è´¥. é”™è¯¯ç :" << GetLastError() << std::endl;
 		return -1;
 	}
 	return 0;
@@ -100,7 +100,7 @@ int IocpServer::Listen(unsigned int nListen)
 {
 	if (listen(_socket, nListen) == SOCKET_ERROR)
 	{
-		std::cout << " WSASocket( listen ) Ê§°Ü. ´íÎóÂë:" << GetLastError() << std::endl;
+		std::cout << " WSASocket( listen ) å¤±è´¥. é”™è¯¯ç :" << GetLastError() << std::endl;
 		return -1;
 	}
 	return 0;
@@ -111,14 +111,14 @@ int IocpServer::Accept()
 	int ret = -1;
 	do{
 #if 0
-		//ÕâÀïÎÒÃÇ²»ÓÃWSAAccept£¬
-		//ÒòÎªÎÒÃÇĞèÔÚ²éÑ¯Íê³É¶Ë¿ÚµÄÊ±ºòÅĞ¶Ï³ö£¬ÊÇaccept¡¢read¡¢connectºÍwriteÀàĞÍ
+		//è¿™é‡Œæˆ‘ä»¬ä¸ç”¨WSAAcceptï¼Œ
+		//å› ä¸ºæˆ‘ä»¬éœ€åœ¨æŸ¥è¯¢å®Œæˆç«¯å£çš„æ—¶å€™åˆ¤æ–­å‡ºï¼Œæ˜¯acceptã€readã€connectå’Œwriteç±»å‹
 
 
-		LPFN_ACCEPTEX _acceptex_func;			//´æ·ÅAcceptExº¯ÊıµÄÖ¸Õë
-		GUID acceptex_guid = WSAID_ACCEPTEX;	//È«¾Ö±êÊ¶·û
+		LPFN_ACCEPTEX _acceptex_func;			//å­˜æ”¾AcceptExå‡½æ•°çš„æŒ‡é’ˆ
+		GUID acceptex_guid = WSAID_ACCEPTEX;	//å…¨å±€æ ‡è¯†ç¬¦
 		DWORD bytes_returned;
-		ret = WSAIoctl							//WSAIoctl»ñÈ¡acceptexµÄº¯ÊıµØÖ·£¬ÉèÖÃ¿ØÖÆ²ÎÊı
+		ret = WSAIoctl							//WSAIoctlè·å–acceptexçš„å‡½æ•°åœ°å€ï¼Œè®¾ç½®æ§åˆ¶å‚æ•°
 		(
 			_socket, SIO_GET_EXTENSION_FUNCTION_POINTER,
 			&acceptex_guid, sizeof(acceptex_guid),
@@ -128,52 +128,52 @@ int IocpServer::Accept()
 		if (ret != 0)
 		{
 			ret = -1;
-			fprintf(stderr, "»ñÈ¡AcceptEx º¯ÊıµØÖ·Ê§°Ü\n");
+			fprintf(stderr, "è·å–AcceptEx å‡½æ•°åœ°å€å¤±è´¥\n");
 			break;
 		}
-#endif // º¯ÊıµØÖ·ÔÚWorkÏß³ÌÖ»»ñÈ¡Ò»´Î
+#endif // å‡½æ•°åœ°å€åœ¨Workçº¿ç¨‹åªè·å–ä¸€æ¬¡
 
-		//½ÓÊÜÌ×½Ó×Ö£¬ipv4£¬Á÷£¬tcpĞ­Òé
+		//æ¥å—å¥—æ¥å­—ï¼Œipv4ï¼Œæµï¼Œtcpåè®®
 		SOCKET accepted_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);	
 		if (accepted_socket == INVALID_SOCKET)
 		{
-			fprintf(stderr, "³õÊ¼»¯accept socketÊ§°Ü\n");
+			fprintf(stderr, "åˆå§‹åŒ–accept socketå¤±è´¥\n");
 			ret = -1;
 			break;
 		}
 
-		//ÕâÀïÉèÖÃOverlappedÀàĞÍ£¬µ½Ê±²éÑ¯Íê³É¶Ë¿ÚµÄÊ±ºò¿ÉÒÔÇø±ğÀàĞÍ
+		//è¿™é‡Œè®¾ç½®Overlappedç±»å‹ï¼Œåˆ°æ—¶æŸ¥è¯¢å®Œæˆç«¯å£çš„æ—¶å€™å¯ä»¥åŒºåˆ«ç±»å‹
 		//Overlapped *accept_overlapped(new Overlapped);
-		std::unique_ptr<Overlapped> accept_overlapped(new Overlapped);//unique_ptrÖÇÄÜÖ¸Õë
-		memset(accept_overlapped.get(), 0, sizeof(Overlapped));				//½«½á¹¹ÌåÖ¸ÕëÎ»ÖÃ³õÊ¼»¯
-		accept_overlapped->type = Overlapped::Accept_type;			  //ÉèÖÃÎ»½ÓÊÜÀàĞÍ
+		std::unique_ptr<Overlapped> accept_overlapped(new Overlapped);//unique_ptræ™ºèƒ½æŒ‡é’ˆ
+		memset(accept_overlapped.get(), 0, sizeof(Overlapped));				//å°†ç»“æ„ä½“æŒ‡é’ˆä½ç½®åˆå§‹åŒ–
+		accept_overlapped->type = Overlapped::Accept_type;			  //è®¾ç½®ä½æ¥å—ç±»å‹
 
 		DWORD bytes = 0; 
 
-		//µ÷ÓÃacceptexº¯Êı£¬½á¹û±£´æÔÚaccept_ex_resultÖĞ
+		//è°ƒç”¨acceptexå‡½æ•°ï¼Œç»“æœä¿å­˜åœ¨accept_ex_resultä¸­
 		const int accept_ex_result = _acceptex_func
 			(
-			_socket,												//±¾»úÌ×½Ó×Ö
-			accepted_socket,										//¿Í»§¶ËÌ×½Ó×Ö
-			accept_overlapped->_read_buffer,						//ÓÃÓÚ±£´æ±¾»úµØÖ·¡¢¿Í»§¶ËµØÖ·¡¢¿ÉÄÜÊÕµ½µÄĞÅÏ¢
-			0,														//ÓÃÓÚ´æ·ÅÊı¾İµÄ¿Õ¼ä´óĞ¡¡£Èç¹û´Ë²ÎÊı=0£¬ÔòAcceptÊ±½«²»»á´ıÊı¾İµ½À´£¬¶øÖ±½Ó·µ»ØËùÒÔÍ¨³£µ±AcceptÓĞÊı¾İÊ±£¬¸Ã²ÎÊıÉè³ÉÎª£ºsizeof(lpOutputBuffer)(Êµ²ÎµÄÊµ¼Ê¿Õ¼ä´óĞ¡) - 2 * (sizeof sockaddr_in + 16)¡£
-			sizeof(sockaddr_in) + 16,								//´æ·Å±¾µØÖ·µØÖ·ĞÅÏ¢µÄ¿Õ¼ä´óĞ¡
-			sizeof(sockaddr_in) + 16,								//´æ·Å±¾Ô¶¶ËµØÖ·ĞÅÏ¢µÄ¿Õ¼ä´óĞ¡
-			&bytes,													//ÓÃÓÚ´æ·Å½ÓÊÕµ½µÄÊı¾İ³¤¶È¡£¸Ã²ÎÊıÖ»ÊÇÔÚÍ¬²½IOµÄÊ±ºò»áÓĞĞ§·µ»Ø£¬Èç¹ûÊÇÒì²½µÄÖØµşIO£¬Ğè´ÓÍê³ÉÍ¨ÖªĞÅÏ¢ÀïÃæµÃµ½¡£(Ïê¼ûMSDN)
-			(LPOVERLAPPED)accept_overlapped.get()					//±êÊ¶Òì²½²Ù×÷Ê±µÄÖØµşIO½á¹¹ĞÅÏ¢
+			_socket,												//æœ¬æœºå¥—æ¥å­—
+			accepted_socket,										//å®¢æˆ·ç«¯å¥—æ¥å­—
+			accept_overlapped->_read_buffer,						//ç”¨äºä¿å­˜æœ¬æœºåœ°å€ã€å®¢æˆ·ç«¯åœ°å€ã€å¯èƒ½æ”¶åˆ°çš„ä¿¡æ¯
+			0,														//ç”¨äºå­˜æ”¾æ•°æ®çš„ç©ºé—´å¤§å°ã€‚å¦‚æœæ­¤å‚æ•°=0ï¼Œåˆ™Acceptæ—¶å°†ä¸ä¼šå¾…æ•°æ®åˆ°æ¥ï¼Œè€Œç›´æ¥è¿”å›æ‰€ä»¥é€šå¸¸å½“Acceptæœ‰æ•°æ®æ—¶ï¼Œè¯¥å‚æ•°è®¾æˆä¸ºï¼šsizeof(lpOutputBuffer)(å®å‚çš„å®é™…ç©ºé—´å¤§å°) - 2 * (sizeof sockaddr_in + 16)ã€‚
+			sizeof(sockaddr_in) + 16,								//å­˜æ”¾æœ¬åœ°å€åœ°å€ä¿¡æ¯çš„ç©ºé—´å¤§å°
+			sizeof(sockaddr_in) + 16,								//å­˜æ”¾æœ¬è¿œç«¯åœ°å€ä¿¡æ¯çš„ç©ºé—´å¤§å°
+			&bytes,													//ç”¨äºå­˜æ”¾æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦ã€‚è¯¥å‚æ•°åªæ˜¯åœ¨åŒæ­¥IOçš„æ—¶å€™ä¼šæœ‰æ•ˆè¿”å›ï¼Œå¦‚æœæ˜¯å¼‚æ­¥çš„é‡å IOï¼Œéœ€ä»å®Œæˆé€šçŸ¥ä¿¡æ¯é‡Œé¢å¾—åˆ°ã€‚(è¯¦è§MSDN)
+			(LPOVERLAPPED)accept_overlapped.get()					//æ ‡è¯†å¼‚æ­¥æ“ä½œæ—¶çš„é‡å IOç»“æ„ä¿¡æ¯
 			);
 		//???
 		if (!(accept_ex_result == TRUE || WSAGetLastError() == WSA_IO_PENDING))
 		{
 			ret = -1;
-			fprintf(stderr, "µ÷ÓÃacceptex º¯ÊıÊ§°Ü\n");
+			fprintf(stderr, "è°ƒç”¨acceptex å‡½æ•°å¤±è´¥\n");
 			break;
 		}
 
-		// ½«accept_socket¹ØÁªµ½Íê³É¶Ë¿Ú
+		// å°†accept_socketå…³è”åˆ°å®Œæˆç«¯å£
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(accepted_socket), _completion_port, 0, 0);
 
-		accept_overlapped.release();	//ÊÍ·Å¶Ë¿Ú
+		accept_overlapped.release();	//é‡Šæ”¾ç«¯å£
 	} while (0);
 	return ret;
 }
@@ -186,31 +186,31 @@ int IocpServer::Init(const char* IP, unsigned short port, unsigned int nListen)
 		ret = WinSockInit();
 		if (ret == -1)
 		{
-			fprintf(stderr, "³õÊ¼»¯WinSockInitÊ§°Ü\n");
+			fprintf(stderr, "åˆå§‹åŒ–WinSockInitå¤±è´¥\n");
 			break;
 		}
-		_completion_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);//´´½¨Íê³É¶Ë¿Ú
+		_completion_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);//åˆ›å»ºå®Œæˆç«¯å£
 		if (!_completion_port)
 		{
-			fprintf(stderr, "´´½¨Íê³É¶Ë¿ÚÊ§°Ü!\n");
+			fprintf(stderr, "åˆ›å»ºå®Œæˆç«¯å£å¤±è´¥!\n");
 			ret = -1;
 			break;
 		}
 
-		if ((ret = InitSocket()) == -1)						//socket³õÊ¼»¯
+		if ((ret = InitSocket()) == -1)						//socketåˆå§‹åŒ–
 			break;
 
-		if ((ret = Bind(IP, port)) == -1)					//°ó¶¨¶Ë¿Ú
+		if ((ret = Bind(IP, port)) == -1)					//ç»‘å®šç«¯å£
 			break;
 
-		if ((ret = Listen(nListen)) == -1)					//¼àÌıÆô¶¯
+		if ((ret = Listen(nListen)) == -1)					//ç›‘å¬å¯åŠ¨
 			break;
 
-		//»ñÈ¡acceptexº¯ÊıµØÖ·£¬Ö»ÓÃ»ñÈ¡Ò»´Î
+		//è·å–acceptexå‡½æ•°åœ°å€ï¼Œåªç”¨è·å–ä¸€æ¬¡
 		SocketExFnsHunter _socketExFnsHunter;
 		_acceptex_func = _socketExFnsHunter.AcceptEx;
 
-		//½¨Á¢¹¤×÷ÕßÏß³ÌWorkThread
+		//å»ºç«‹å·¥ä½œè€…çº¿ç¨‹WorkThread
 		Work *_workers = new Work(this);
 		_workers->Start();
 
@@ -241,21 +241,21 @@ void IocpServer::Mainloop()
             log_sockaddr_in("locale: ", locale_addr);
             log_sockaddr_in("remote: ", remote_addr);
             
-            //acceptexÍê³ÉÁË²Ù×÷£¬ËùÒÔÎÒÃÇ»¹Òª½«Æä¹ØÁªµ½Íê³É¶Ë¿Ú¡£
-			//ÕâÀïÏÈ²»¸ÄÔì£¬µÈºóÃæÎÒÃÇ»á½øĞĞÓÅ»¯¸ÄÔì
-			//ÎÒÃÇÒ²¿ÉÒÔÌí¼Ó¶à¸öacceptµ½Íê³É¶Ë¿Ú
+            //acceptexå®Œæˆäº†æ“ä½œï¼Œæ‰€ä»¥æˆ‘ä»¬è¿˜è¦å°†å…¶å…³è”åˆ°å®Œæˆç«¯å£ã€‚
+			//è¿™é‡Œå…ˆä¸æ”¹é€ ï¼Œç­‰åé¢æˆ‘ä»¬ä¼šè¿›è¡Œä¼˜åŒ–æ”¹é€ 
+			//æˆ‘ä»¬ä¹Ÿå¯ä»¥æ·»åŠ å¤šä¸ªacceptåˆ°å®Œæˆç«¯å£
 			Accept();
 
-			//ĞÂ¿Í»§¶ËÁ¬½Ó
-			fprintf(stderr, "ĞÂ¿Í»§¶Ë¼ÓÈë\n");
+			//æ–°å®¢æˆ·ç«¯è¿æ¥
+			fprintf(stderr, "æ–°å®¢æˆ·ç«¯åŠ å…¥\n");
 			continue;
 		}
 
 	}
-	#endif//Ô­Ö÷Ïß³Ì
+	#endif//åŸä¸»çº¿ç¨‹
 
-	//Ö÷Ïß³Ì¿ÕÏĞ¡£
-	std::cout << "Ö÷Ïß³Ì¿ÕÏĞ" << std::endl;
+	//ä¸»çº¿ç¨‹ç©ºé—²ã€‚
+	std::cout << "ä¸»çº¿ç¨‹ç©ºé—²" << std::endl;
 	while (1)
 	{}
 }
@@ -264,10 +264,10 @@ void IocpServer::Run(const char* ip, unsigned short port, unsigned int nListen =
 {
 	if (Init(ip, port, nListen) == -1)
 	{
-		fprintf(stderr, "·şÎñÆ÷Æô¶¯Ê§°Ü\n");
+		fprintf(stderr, "æœåŠ¡å™¨å¯åŠ¨å¤±è´¥\n");
 		return;
 	}
-	std::cout << "·şÎñÆ÷ÒÑ¾­Æô¶¯\n";
+	std::cout << "æœåŠ¡å™¨å·²ç»å¯åŠ¨\n";
 	Mainloop();
 }
 

@@ -5,10 +5,6 @@ VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "My_IOCP", "My_IOCP.vcxproj", "{720B6FC8-5207-43B3-9737-E91B02C4305A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lesson12", "..\..\迅雷下载\IOCP套件\lesson12\lesson12.vcxproj", "{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lesson03", "..\..\迅雷下载\IOCP套件\lesson03\lesson03.vcxproj", "{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,26 +27,6 @@ Global
 		{720B6FC8-5207-43B3-9737-E91B02C4305A}.Release|x64.Build.0 = Release|x64
 		{720B6FC8-5207-43B3-9737-E91B02C4305A}.Release|x86.ActiveCfg = Release|Win32
 		{720B6FC8-5207-43B3-9737-E91B02C4305A}.Release|x86.Build.0 = Release|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Debug|Win32.Build.0 = Debug|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Debug|x64.ActiveCfg = Debug|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Debug|x86.ActiveCfg = Debug|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Debug|x86.Build.0 = Debug|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Release|Win32.ActiveCfg = Release|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Release|Win32.Build.0 = Release|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Release|x64.ActiveCfg = Release|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Release|x86.ActiveCfg = Release|Win32
-		{9DBC36DE-FB92-46D6-93E5-9DF72A826E97}.Release|x86.Build.0 = Release|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Debug|Win32.ActiveCfg = Debug|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Debug|Win32.Build.0 = Debug|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Debug|x64.ActiveCfg = Debug|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Debug|x86.ActiveCfg = Debug|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Debug|x86.Build.0 = Debug|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Release|Win32.ActiveCfg = Release|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Release|Win32.Build.0 = Release|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Release|x64.ActiveCfg = Release|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Release|x86.ActiveCfg = Release|Win32
-		{CB7DC77D-EF6E-45FB-B159-3CD1F7374C54}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

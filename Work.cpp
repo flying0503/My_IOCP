@@ -1,4 +1,4 @@
-#include "Work.h"
+ï»¿#include "Work.h"
 #include "overlapped.h"
 #include "SocketExFnsHunter.h"
 #include <WinSock2.h>
@@ -8,7 +8,7 @@
 
 DWORD WINAPI ServerWorkerThread(LPVOID p)
 {
-	assert(p);						//Î¬»¤Ö¸Õëp
+	assert(p);						//ç»´æŠ¤æŒ‡é’ˆp
 	auto workers = (Work*)p;
 	workers->ThreadProc();
 	return 0;
@@ -24,20 +24,20 @@ Work::~Work()
 {
 }
 
-#pragma pack(push) //±£´æ¶ÔÆë×´Ì¬
-#pragma pack(1)//Éè¶¨Îª4×Ö½Ú¶ÔÆë
+#pragma pack(push) //ä¿å­˜å¯¹é½çŠ¶æ€
+#pragma pack(1)//è®¾å®šä¸º4å­—èŠ‚å¯¹é½
 
 typedef struct acceptex_sockaddr_in {
 	CHAR b_zero[10];
 	sockaddr_in addr_in;
 	CHAR e_zero[2];
 }acceptex_sockaddr_in;
-#pragma pack(pop)//»Ö¸´¶ÔÆë×´Ì¬
+#pragma pack(pop)//æ¢å¤å¯¹é½çŠ¶æ€
 
-inline void log_sockaddr_in(const char* tag, sockaddr_in* addr)//µØÖ·×ª»»·â×°
+inline void log_sockaddr_in(const char* tag, sockaddr_in* addr)//åœ°å€è½¬æ¢å°è£…
 {
 	char ip_addr[30];
-	inet_ntop(AF_INET, &addr->sin_addr, ip_addr, sizeof(ip_addr));	 //½«µã·ÖÊ®½øÖÆµÄipµØÖ·×ª»¯ÎªÓÃÓÚÍøÂç´«ÊäµÄÊıÖµ¸ñÊ½
+	inet_ntop(AF_INET, &addr->sin_addr, ip_addr, sizeof(ip_addr));	 //å°†ç‚¹åˆ†åè¿›åˆ¶çš„ipåœ°å€è½¬åŒ–ä¸ºç”¨äºç½‘ç»œä¼ è¾“çš„æ•°å€¼æ ¼å¼
 	fprintf(stdout, "%s ---- %s:%d\n", tag, ip_addr, ntohs(addr->sin_port));
 }
 
@@ -46,19 +46,19 @@ void Work::Start()
 	SYSTEM_INFO SystemInfo;
 	GetSystemInfo(&SystemInfo);
 
-	//¸ù¾İÏµÍ³ÉÏ¿ÉÓÃµÄ´¦ÀíÆ÷ÊıÁ¿´´½¨¹¤×÷Ïß³Ì¡£ÎªÃ¿¸ö´¦ÀíÆ÷´´½¨Á½¸ö¹¤×÷Ïß³Ì¡£
+	//æ ¹æ®ç³»ç»Ÿä¸Šå¯ç”¨çš„å¤„ç†å™¨æ•°é‡åˆ›å»ºå·¥ä½œçº¿ç¨‹ã€‚ä¸ºæ¯ä¸ªå¤„ç†å™¨åˆ›å»ºä¸¤ä¸ªå·¥ä½œçº¿ç¨‹ã€‚
 
 	for (size_t i = 0; i < SystemInfo.dwNumberOfProcessors*2; i++)
 	{
 		HANDLE ThreadHandle;
-		//´´½¨Ò»¸ö·şÎñÆ÷¹¤×÷Ïß³Ì£¬²¢½«Íê³É¶Ë¿Ú´«µİ¸ø¸ÃÏß³Ì¡£
+		//åˆ›å»ºä¸€ä¸ªæœåŠ¡å™¨å·¥ä½œçº¿ç¨‹ï¼Œå¹¶å°†å®Œæˆç«¯å£ä¼ é€’ç»™è¯¥çº¿ç¨‹ã€‚
 		DWORD ThreadID;
 		if ((ThreadHandle = CreateThread(NULL, 0, ServerWorkerThread, this, 0, &ThreadID)) == NULL)
 		{
-			std::cout << "´´½¨Ïß³Ì´íÎó£¬´íÎóÂëÊÇ£º" << GetLastError() << std::endl;
+			std::cout << "åˆ›å»ºçº¿ç¨‹é”™è¯¯ï¼Œé”™è¯¯ç æ˜¯ï¼š" << GetLastError() << std::endl;
 			return ;
 		}
-		//¹Ø±ÕÏß³Ì¾ä±ú
+		//å…³é—­çº¿ç¨‹å¥æŸ„
 		CloseHandle(ThreadHandle);
 	}
 	_iocpServer->Accept();
@@ -73,11 +73,11 @@ void Work::ThreadProc()
 
 	while (1)
 	{
-		//»ñÈ¡Á¬½Ó¶ÓÁĞ
+		//è·å–è¿æ¥é˜Ÿåˆ—
 		BOOL bRet = GetQueuedCompletionStatus(_iocpServer->_completion_port,
 			&bytes_transferred,
 			&completion_key,
-			reinterpret_cast<LPOVERLAPPED*>(&overlapped),					//ĞÂÌØĞÔÇ¿ÖÆÀàĞÍ×ª»»
+			reinterpret_cast<LPOVERLAPPED*>(&overlapped),					//æ–°ç‰¹æ€§å¼ºåˆ¶ç±»å‹è½¬æ¢
 			INFINITE);
 		if (bRet)
 		{
@@ -90,14 +90,14 @@ void Work::ThreadProc()
 				log_sockaddr_in("locale: ", locale_addr);
 				log_sockaddr_in("remote: ", remote_addr);
 
-				//acceptexÍê³ÉÁË²Ù×÷£¬ËùÒÔÎÒÃÇ»¹Òª½«Æä¹ØÁªµ½Íê³É¶Ë¿Ú¡£
-				//ÕâÀïÏÈ²»¸ÄÔì£¬µÈºóÃæÎÒÃÇ»á½øĞĞÓÅ»¯¸ÄÔì
-				//ÎÒÃÇÒ²¿ÉÒÔÌí¼Ó¶à¸öacceptµ½Íê³É¶Ë¿Ú
+				//acceptexå®Œæˆäº†æ“ä½œï¼Œæ‰€ä»¥æˆ‘ä»¬è¿˜è¦å°†å…¶å…³è”åˆ°å®Œæˆç«¯å£ã€‚
+				//è¿™é‡Œå…ˆä¸æ”¹é€ ï¼Œç­‰åé¢æˆ‘ä»¬ä¼šè¿›è¡Œä¼˜åŒ–æ”¹é€ 
+				//æˆ‘ä»¬ä¹Ÿå¯ä»¥æ·»åŠ å¤šä¸ªacceptåˆ°å®Œæˆç«¯å£
 
 				_iocpServer->Accept();
 
-				//ĞÂ¿Í»§¶ËÁ¬½Ó
-				fprintf(stderr, "ĞÂ¿Í»§¶Ë¼ÓÈë\n");
+				//æ–°å®¢æˆ·ç«¯è¿æ¥
+				fprintf(stderr, "æ–°å®¢æˆ·ç«¯åŠ å…¥\n");
 				continue;
 			}
 		}

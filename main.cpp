@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include "IocpServer.h"
 
 int main(int argc,char *argv[])
@@ -6,8 +6,8 @@ int main(int argc,char *argv[])
 	IocpServer server;
 	if (argv[1] == NULL||argv[2] == NULL||argv[3] == NULL)
 	{
-		std::cout << "Ê¹ÓÃ·½·¨£ºMy_IOCP.exe IPµØÖ· ¶Ë¿ÚºÅ µÈ´ý¶ÓÁÐÊý\n";
-		std::cout << "ÀýÈç£ºMy_IOCP.exe 127.0.0.1 8888 5 (Ä¬ÈÏÆô¶¯·½Ê½)\n";
+		std::cout << "ä½¿ç”¨æ–¹æ³•ï¼šMy_IOCP.exe IPåœ°å€ ç«¯å£å· ç­‰å¾…é˜Ÿåˆ—æ•°\n";
+		std::cout << "ä¾‹å¦‚ï¼šMy_IOCP.exe 127.0.0.1 8888 5 (é»˜è®¤å¯åŠ¨æ–¹å¼)\n";
 		server.Run("127.0.0.1", 8888,5);
 	}
 	else
