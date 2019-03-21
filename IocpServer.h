@@ -6,6 +6,7 @@
 #include <thread>
 #include <iostream>
 #include "connection.h"
+#include "SocketExFnsHunter.h"
 #pragma comment(lib,"ws2_32.lib")
 
 class IocpServer
@@ -40,6 +41,7 @@ public:
 	bool _wsa_inited;
 	HANDLE _completion_port;
 	SOCKET _socket;
+	LPFN_ACCEPTEX _acceptex_func;	//用于保存AcceptEx()的指针
 };
 
 #endif

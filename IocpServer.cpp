@@ -5,6 +5,7 @@
 #include "overlapped.h"
 #include <memory>
 #include "SocketExFnsHunter.h"
+#include "Workers.h"
 #pragma warning(disable:4996)
 
 inline void log_sockaddr_in(const char* tag, sockaddr_in* addr)
@@ -63,8 +64,16 @@ int IocpServer::Init(const char* ip, unsigned short port,unsigned int nListen)
 		if ((ret = Listen(nListen)) == -1)			//监听Socket
 			break;
 
-		if (Accept() == -1)							//接受客户端联入
-			break;
+		//if (Accept() == -1)							//接受客户端联入
+		//break;
+		
+		//获取acceptex函数地址，只需要获取一次就可以了
+		SocketExFnsHunter _socketExFnsHunter;
+		_acceptex_func = _socketExFnsHunter.AcceptEx;
+
+		Workers *_workers = new Workers(this);
+		_workers->Start();
+
 	} while (0);
 	return ret;
 
@@ -141,7 +150,7 @@ int IocpServer::Accept()
 {
 	int ret = -1;
 	do{
-
+#if 0  //不需要获取AcceptEx()函数指针，由SocketExFnsHunter完成
 		//这里我们不用WSAAccept，
 		//因为我们需在查询完成端口的时候判断出，是accept、read、connect和write类型
 
@@ -163,8 +172,11 @@ int IocpServer::Accept()
 			fprintf(stderr, "获取AcceptEx 函数地址失败\n");
 			break;
 		}
+#endif // 0  //不需要获取AcceptEx()函数指针，由SocketExFnsHunter完成
 
-		SOCKET accepted_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);	//客户端套接字
+		
+
+		SOCKET accepted_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);			//客户端套接字
 		if (accepted_socket == INVALID_SOCKET)
 		{
 			fprintf(stderr, "初始化accept socket失败\n");
@@ -216,6 +228,7 @@ void IocpServer::Run(const char* ip, unsigned short port, unsigned int nListen =
 
 void IocpServer::Mainloop()
 {
+#if 0
 	DWORD bytes_transferred;
 	ULONG_PTR completion_key;
 	DWORD Flags = 0;
@@ -309,7 +322,12 @@ void IocpServer::Mainloop()
 			}
 		}
 	}
+#endif //现有Workers线程去处理业务，主循环空闲
 
+	while (true)
+	{
+
+	}
 }
 
 void IocpServer::AsyncRead(const Connection* conn)
