@@ -130,18 +130,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IocpServer.h" />
-    <ClInclude Include="overlapped.h" />
-    <ClInclude Include="SocketExFnsHunter.h" />
-    <ClInclude Include="Work.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="connection.cpp" />
     <ClCompile Include="IocpServer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Work.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="AcceptEx浅析.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="connection.h" />
+    <ClInclude Include="IocpServer.h" />
+    <ClInclude Include="overlapped.h" />
+    <ClInclude Include="SocketExFnsHunter.h" />
+    <ClInclude Include="Workers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
