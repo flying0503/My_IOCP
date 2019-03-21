@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _WORKERS_
+#define _WORKERS_
 
 #include <mswsock.h>
 #include "IocpServer.h"
@@ -11,6 +12,8 @@ public:
     void ThreadProc();
 private:
 	IocpServer* _iocpServer;
-
 };
+
+#endif // !_WORKERS_
+
 

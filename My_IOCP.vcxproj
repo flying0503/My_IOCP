@@ -133,6 +133,7 @@
     <ClCompile Include="connection.cpp" />
     <ClCompile Include="IocpServer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Workers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="AcceptEx浅析.txt" />

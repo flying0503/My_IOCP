@@ -47,7 +47,7 @@ private:
 	std::unique_ptr<Implementation> _impl;			
 };
 
-class Connection::Implementation								//实现类定义
+class Connection::Implementation								//实现类定义，嵌套关系
 {
 public:
 	Implementation(const SOCKET& socket, Connection* owner);
