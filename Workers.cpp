@@ -1,4 +1,4 @@
-#include <winsock2.h>
+ï»¿#include <winsock2.h>
 #include <windows.h>
 #include <stdio.h>
 #include <assert.h>
@@ -21,41 +21,41 @@ Workers::Workers(IocpServer * server)
 
 void Workers::Start()
 {
-	SYSTEM_INFO SystemInfo;			//ÏµÍ³ĞÅÏ¢½á¹¹Ìå
-	GetSystemInfo(&SystemInfo);		//»ñÈ¡ÏµÍ³ĞÅÏ¢½á¹¹Ìå
+	SYSTEM_INFO SystemInfo;			//ç³»ç»Ÿä¿¡æ¯ç»“æ„ä½“
+	GetSystemInfo(&SystemInfo);		//è·å–ç³»ç»Ÿä¿¡æ¯ç»“æ„ä½“
 
-	//¸ù¾İÏµÍ³ÉÏ¿ÉÓÃµÄ´¦ÀíÆ÷ÊıÁ¿´´½¨¹¤×÷Ïß³Ì¡£ÎªÃ¿¸ö´¦ÀíÆ÷´´½¨Á½¸ö¹¤×÷Ïß³Ì¡£
+	//æ ¹æ®ç³»ç»Ÿä¸Šå¯ç”¨çš„å¤„ç†å™¨æ•°é‡åˆ›å»ºå·¥ä½œçº¿ç¨‹ã€‚ä¸ºæ¯ä¸ªå¤„ç†å™¨åˆ›å»ºä¸¤ä¸ªå·¥ä½œçº¿ç¨‹ã€‚
 	for (int i = 0; i < SystemInfo.dwNumberOfProcessors * 2; i++)
 	{
-		//´´½¨·şÎñÆ÷¹¤×÷Ïß³Ì£¬²¢½«Íê³É¶Ë¿Ú´«µİ¸ø¸ÃÏß³Ì¡£
+		//åˆ›å»ºæœåŠ¡å™¨å·¥ä½œçº¿ç¨‹ï¼Œå¹¶å°†å®Œæˆç«¯å£ä¼ é€’ç»™è¯¥çº¿ç¨‹ã€‚
 		DWORD ThreadID;
 		HANDLE ThreadHandle = CreateThread(
-			NULL,					//lpThreadAttributes ±íÊ¾Ïß³ÌÄÚºË¶ÔÏóµÄ°²È«ÊôĞÔ£¬Ò»°ã´«ÈëNULL±íÊ¾Ê¹ÓÃÄ¬ÈÏÉèÖÃ¡£
-			0,						//dwStackSize ±íÊ¾Ïß³ÌÕ»¿Õ¼ä´óĞ¡¡£´«Èë0±íÊ¾Ê¹ÓÃÄ¬ÈÏ´óĞ¡£¨1MB£©¡£
-			ServerWorkerThread,		//lpStartAddress ±íÊ¾ĞÂÏß³ÌËùÖ´ĞĞµÄÏß³Ìº¯ÊıµØÖ·£¬¶à¸öÏß³Ì¿ÉÒÔÊ¹ÓÃÍ¬Ò»¸öº¯ÊıµØÖ·¡£
-			this,					//lpParameter ÊÇ´«¸øÏß³Ìº¯ÊıµÄ²ÎÊı¡£
-			0,						//dwCreationFlags Ö¸¶¨¶îÍâµÄ±êÖ¾À´¿ØÖÆÏß³ÌµÄ´´½¨£¬Îª0±íÊ¾Ïß³Ì´´½¨Ö®ºóÁ¢¼´¾Í¿ÉÒÔ½øĞĞµ÷¶È
-			&ThreadID);				//lpThreadId ½«·µ»ØÏß³ÌµÄIDºÅ£¬´«ÈëNULL±íÊ¾²»ĞèÒª·µ»Ø¸ÃÏß³ÌIDºÅ¡£
+			NULL,					//lpThreadAttributes è¡¨ç¤ºçº¿ç¨‹å†…æ ¸å¯¹è±¡çš„å®‰å…¨å±æ€§ï¼Œä¸€èˆ¬ä¼ å…¥NULLè¡¨ç¤ºä½¿ç”¨é»˜è®¤è®¾ç½®ã€‚
+			0,						//dwStackSize è¡¨ç¤ºçº¿ç¨‹æ ˆç©ºé—´å¤§å°ã€‚ä¼ å…¥0è¡¨ç¤ºä½¿ç”¨é»˜è®¤å¤§å°ï¼ˆ1MBï¼‰ã€‚
+			ServerWorkerThread,		//lpStartAddress è¡¨ç¤ºæ–°çº¿ç¨‹æ‰€æ‰§è¡Œçš„çº¿ç¨‹å‡½æ•°åœ°å€ï¼Œå¤šä¸ªçº¿ç¨‹å¯ä»¥ä½¿ç”¨åŒä¸€ä¸ªå‡½æ•°åœ°å€ã€‚
+			this,					//lpParameter æ˜¯ä¼ ç»™çº¿ç¨‹å‡½æ•°çš„å‚æ•°ã€‚
+			0,						//dwCreationFlags æŒ‡å®šé¢å¤–çš„æ ‡å¿—æ¥æ§åˆ¶çº¿ç¨‹çš„åˆ›å»ºï¼Œä¸º0è¡¨ç¤ºçº¿ç¨‹åˆ›å»ºä¹‹åç«‹å³å°±å¯ä»¥è¿›è¡Œè°ƒåº¦
+			&ThreadID);				//lpThreadId å°†è¿”å›çº¿ç¨‹çš„IDå·ï¼Œä¼ å…¥NULLè¡¨ç¤ºä¸éœ€è¦è¿”å›è¯¥çº¿ç¨‹IDå·ã€‚
 		
 		if (ThreadHandle == NULL)
 		{
-			printf("´´½¨Ïß³ÌÊ§°Ü£¬´íÎóÂë£º %d\n", GetLastError());
+			printf("åˆ›å»ºçº¿ç¨‹å¤±è´¥ï¼Œé”™è¯¯ç ï¼š %d\n", GetLastError());
 			return;
 		}
-		printf("Ïß³ÌID£º%d\n",ThreadID);
+		printf("çº¿ç¨‹IDï¼š%d\n",ThreadID);
 
-		//¹Ø±ÕÏß³Ì¾ä±ú
+		//å…³é—­çº¿ç¨‹å¥æŸ„
 		CloseHandle(ThreadHandle);
 	}
 
-	printf("Æô¶¯Ïß³ÌÊı£º%d", SystemInfo.dwNumberOfProcessors * 2);
+	printf("å¯åŠ¨çº¿ç¨‹æ•°ï¼š%d", SystemInfo.dwNumberOfProcessors * 2);
 
-	_iocpServer->Accept();		//¿ªÊ¼µÈ´ıÁ´½Ó
+	_iocpServer->Accept();		//å¼€å§‹ç­‰å¾…é“¾æ¥
 }
 
-void Workers::ThreadProc()		//ÒµÎñº¯Êı
+void Workers::ThreadProc()		//ä¸šåŠ¡å‡½æ•°
 {
-#if 1//WorkersÏß³Ì´¦ÀíÒµÎñ£¬Ö÷Ñ­»·¿ÕÏĞ
+#if 1//Workersçº¿ç¨‹å¤„ç†ä¸šåŠ¡ï¼Œä¸»å¾ªç¯ç©ºé—²
 	DWORD bytes_transferred;
 	ULONG_PTR completion_key;
 	DWORD Flags = 0;
@@ -63,21 +63,21 @@ void Workers::ThreadProc()		//ÒµÎñº¯Êı
 
 	while (1)
 	{
-		//´Ó¶ÓÁĞÖĞ»ñÈ¡ÇëÇó£¬¼ì²éÍê³É¶Ë¿Ú×´Ì¬ÓÃÓÚ½ÓÊÜÍøÂç²Ù×÷µÄµ½´ï
+		//ä»é˜Ÿåˆ—ä¸­è·å–è¯·æ±‚ï¼Œæ£€æŸ¥å®Œæˆç«¯å£çŠ¶æ€ç”¨äºæ¥å—ç½‘ç»œæ“ä½œçš„åˆ°è¾¾
 		bool bRet = GetQueuedCompletionStatus(
-			_iocpServer->_completion_port,					//Íê³É¶Ë¿Ú¾ä±ú£¬Àà³ÉÔ±
-			&bytes_transferred,								//²Ù×÷Íê³Éºó·µ»Ø×Ö½ÚÊı
-			&completion_key,								//²Ù×÷Íê³Éºó´æ·ÅµÄkey
-			reinterpret_cast<LPOVERLAPPED*>(&overlapped),	//ÖØµş½á¹¹
-			INFINITE);										//µÈ´ıÊ±¼ä£¬ÉèÎªÎŞ
+			_iocpServer->_completion_port,					//å®Œæˆç«¯å£å¥æŸ„ï¼Œç±»æˆå‘˜
+			&bytes_transferred,								//æ“ä½œå®Œæˆåè¿”å›å­—èŠ‚æ•°
+			&completion_key,								//æ“ä½œå®Œæˆåå­˜æ”¾çš„key
+			reinterpret_cast<LPOVERLAPPED*>(&overlapped),	//é‡å ç»“æ„
+			INFINITE);										//ç­‰å¾…æ—¶é—´ï¼Œè®¾ä¸ºæ— 
 
 		if (bRet == false)
 		{
-			//¿Í·ş¶ËÖ±½ÓÍË³ö£¬Ã»ÓĞµ÷ÓÃclosesocketÕı³£¹Ø±ÕÁ¬½Ó
+			//å®¢æœç«¯ç›´æ¥é€€å‡ºï¼Œæ²¡æœ‰è°ƒç”¨closesocketæ­£å¸¸å…³é—­è¿æ¥
 			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
 			{
-				//¿Í»§¶Ë¶Ï¿ª
-				fprintf(stderr, "client:%d ¶Ï¿ª\n", overlapped->connection->GetSocket());
+				//å®¢æˆ·ç«¯æ–­å¼€
+				fprintf(stderr, "client:%d æ–­å¼€\n", overlapped->connection->GetSocket());
 				delete overlapped->connection;
 				overlapped = nullptr;
 				continue;
@@ -87,12 +87,12 @@ void Workers::ThreadProc()		//ÒµÎñº¯Êı
 
 		if (overlapped->type == Overlapped::Accept_type)
 		{
-			//acceptexÍê³ÉÁË²Ù×÷£¬ËùÒÔÎÒÃÇ»¹Òª½«Æä¹ØÁªµ½Íê³É¶Ë¿Ú¡£
-			//ÕâÀïÏÈ²»¸ÄÔì£¬µÈºóÃæÎÒÃÇ»á½øĞĞÓÅ»¯¸ÄÔì
-			//ÎÒÃÇÒ²¿ÉÒÔÌí¼Ó¶à¸öacceptµ½Íê³É¶Ë¿Ú
+			//acceptexå®Œæˆäº†æ“ä½œï¼Œæ‰€ä»¥æˆ‘ä»¬è¿˜è¦å°†å…¶å…³è”åˆ°å®Œæˆç«¯å£ã€‚
+			//è¿™é‡Œå…ˆä¸æ”¹é€ ï¼Œç­‰åé¢æˆ‘ä»¬ä¼šè¿›è¡Œä¼˜åŒ–æ”¹é€ 
+			//æˆ‘ä»¬ä¹Ÿå¯ä»¥æ·»åŠ å¤šä¸ªacceptåˆ°å®Œæˆç«¯å£
 			_iocpServer->Accept();
-			//ĞÂ¿Í»§¶ËÁ¬½Ó
-			fprintf(stderr, "ĞÂ¿Í»§¶Ë¼ÓÈë\n");
+			//æ–°å®¢æˆ·ç«¯è¿æ¥
+			fprintf(stderr, "æ–°å®¢æˆ·ç«¯åŠ å…¥\n");
 			fprintf(stderr, "client:%d\n", overlapped->connection->GetSocket());
 			_iocpServer->AsyncRead(overlapped->connection);
 			//AsyncRead(overlapped->connection);
@@ -101,8 +101,8 @@ void Workers::ThreadProc()		//ÒµÎñº¯Êı
 
 		if (bytes_transferred == 0)
 		{
-			//¿Í»§¶Ë¶Ï¿ª
-			fprintf(stderr, "client:%d ¶Ï¿ª\n", overlapped->connection->GetSocket());
+			//å®¢æˆ·ç«¯æ–­å¼€
+			fprintf(stderr, "client:%d æ–­å¼€\n", overlapped->connection->GetSocket());
 			delete overlapped->connection;
 			overlapped = nullptr;
 			continue;
@@ -110,11 +110,11 @@ void Workers::ThreadProc()		//ÒµÎñº¯Êı
 
 		if (overlapped->type == Overlapped::Type::Read_type)
 		{
-			// Òì²½¶ÁÍê³É
+			// å¼‚æ­¥è¯»å®Œæˆ
 			char* value = reinterpret_cast<char*>(overlapped->connection->GetReadBuffer());
-			value[bytes_transferred] = '\0';	//ĞÎ³É±ê×¼×Ö·û´®
+			value[bytes_transferred] = '\0';	//å½¢æˆæ ‡å‡†å­—ç¬¦ä¸²
 			fprintf(stderr, "client:%d , msg:%s\n", overlapped->connection->GetSocket(), value);
-			//»Ø·¢¹¦ÄÜ£¬¸ø¿Í»§¶Ë·¢ËÍ»ØÈ¥
+			//å›å‘åŠŸèƒ½ï¼Œç»™å®¢æˆ·ç«¯å‘é€å›å»
 			_iocpServer->AsyncWrite(overlapped->connection, value, bytes_transferred);
 			//AsyncWrite(overlapped->connection, value, bytes_transferred);
 			continue;
@@ -125,32 +125,32 @@ void Workers::ThreadProc()		//ÒµÎñº¯Êı
 			Connection *conn = overlapped->connection;
 			conn->SetSentBytes(conn->GetSentBytes() + bytes_transferred);
 
-			//ÅĞ¶ÏÊÇ·ñÖ»·¢ËÍÁËÒ»²¿·Ö
+			//åˆ¤æ–­æ˜¯å¦åªå‘é€äº†ä¸€éƒ¨åˆ†
 			if (conn->GetSentBytes() < conn->GetTotalBytes())
 			{
-				//½«Ê£Óà²¿·ÖÔÙ·¢ËÍ
+				//å°†å‰©ä½™éƒ¨åˆ†å†å‘é€
 				overlapped->wsa_buf.len = conn->GetTotalBytes() - conn->GetSentBytes();
 				overlapped->wsa_buf.buf = reinterpret_cast<CHAR*>(conn->GetWriteBuffer()) + conn->GetSentBytes();
 
 				int send_result = WSASend(
-					conn->GetSocket(),								//¿Í»§¶ËÁ´½ÓµÄÌ×½Ó×Ö
-					&overlapped->wsa_buf,							//wsa»º³åÇø
-					1,												//wsa»º³åÇøÊıÄ¿
-					&bytes_transferred,								//´«ËÍ×Ö½Ú
-					0,												//±êÖ¾Î»£¬ÉèÎªÁã
-					reinterpret_cast<LPWSAOVERLAPPED>(overlapped),	//ÖØµş½á¹¹
-					NULL);											//²Ù×÷Íê³ÉºóµÄµ÷ÓÃº¯ÊıÖ¸Õë£¬ÉèÎª¿Õ
+					conn->GetSocket(),								//å®¢æˆ·ç«¯é“¾æ¥çš„å¥—æ¥å­—
+					&overlapped->wsa_buf,							//wsaç¼“å†²åŒº
+					1,												//wsaç¼“å†²åŒºæ•°ç›®
+					&bytes_transferred,								//ä¼ é€å­—èŠ‚
+					0,												//æ ‡å¿—ä½ï¼Œè®¾ä¸ºé›¶
+					reinterpret_cast<LPWSAOVERLAPPED>(overlapped),	//é‡å ç»“æ„
+					NULL);											//æ“ä½œå®Œæˆåçš„è°ƒç”¨å‡½æ•°æŒ‡é’ˆï¼Œè®¾ä¸ºç©º
 
 				if (!(send_result == NULL || (send_result == SOCKET_ERROR && WSAGetLastError() == WSA_IO_PENDING)))
-					fprintf(stderr, "·¢ËÍÊı¾İÊ§°Ü\n");
+					fprintf(stderr, "å‘é€æ•°æ®å¤±è´¥\n");
 			}
 			else
 			{
-				//·¢ËÍÍê³É£¬µÈ´ı¶ÁÈ¡
+				//å‘é€å®Œæˆï¼Œç­‰å¾…è¯»å–
 				_iocpServer->AsyncRead(overlapped->connection);
 				//AsyncRead(overlapped->connection);
 			}
 		}
 	}
-#endif //WorkersÏß³Ì´¦ÀíÒµÎñ£¬Ö÷Ñ­»·¿ÕÏĞ
+#endif //Workersçº¿ç¨‹å¤„ç†ä¸šåŠ¡ï¼Œä¸»å¾ªç¯ç©ºé—²
 }

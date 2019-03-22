@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <WinSock2.h>
 #include <Windows.h>
@@ -11,14 +11,14 @@ typedef void (WINAPI *GetAcceptExSockaddrsPtr)(PVOID, DWORD, DWORD, DWORD, LPSOC
 class SocketExFnsHunter
 {
 public:
-    SocketExFnsHunter(){ Hunt(); }					//Ê¹ÓÃHunt()×ÔÎÒ³õÊ¼»¯
+    SocketExFnsHunter(){ Hunt(); }					//ä½¿ç”¨Hunt()è‡ªæˆ‘åˆå§‹åŒ–
     AcceptExPtr AcceptEx;
     ConnectExPtr ConnectEx;
     GetAcceptExSockaddrsPtr GetAcceptExSockaddrs;
 
 private:
 
-    void Hunt()//»ñÈ¡acceptexÈ«¾ÖID,¹Ì¶¨Ì×Â·
+    void Hunt()//è·å–acceptexå…¨å±€ID,å›ºå®šå¥—è·¯
     {
         SOCKET s = socket(AF_INET, SOCK_STREAM, 0);
         if (s == INVALID_SOCKET)

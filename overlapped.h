@@ -1,4 +1,4 @@
-#include<WinSock2.h>
+﻿#include<WinSock2.h>
 #include"connection.h"
 #define ReadBufferSize 1024
 struct Overlapped

@@ -1,4 +1,4 @@
-#ifndef _connection_h_
+ï»¿#ifndef _connection_h_
 #define _connection_h_
 #include<memory>
 #include<WinSock2.h>
@@ -12,42 +12,42 @@ public:
 	~Connection();
 
 public:
-	//func() const ĞŞÊÎ·µ»ØÖµÎªconstÀàĞÍ
+	//func() const ä¿®é¥°è¿”å›å€¼ä¸ºconstç±»å‹
 
-	SOCKET& GetSocket();                                        //»ñÈ¡Ì×½Ó×Ö
+	SOCKET& GetSocket();                                        //è·å–å¥—æ¥å­—
 
-	void* GetReadBuffer();                                      //»ñÈ¡¶Á»º³åÇø
+	void* GetReadBuffer();                                      //è·å–è¯»ç¼“å†²åŒº
 
-	std::size_t GetReadBufferSize();                            //»ñÈ¡¶È»º³åÇø´óĞ¡
+	std::size_t GetReadBufferSize();                            //è·å–åº¦ç¼“å†²åŒºå¤§å°
 
-	void* GetWriteBuffer();                                     //»ñÈ¡Ğ´»º³åÇø
+	void* GetWriteBuffer();                                     //è·å–å†™ç¼“å†²åŒº
 
-	std::size_t GetWriteBufferSize() const;                     //»ñÈ¡Ğ´»º³åÇø´óĞ¡
+	std::size_t GetWriteBufferSize() const;                     //è·å–å†™ç¼“å†²åŒºå¤§å°
 
-	void ResizeWriteBuffer(std::size_t new_size);               //µ÷ÕûĞ´»º³åÇø
+	void ResizeWriteBuffer(std::size_t new_size);               //è°ƒæ•´å†™ç¼“å†²åŒº
 
-	std::size_t GetSentBytes() const;                           //»ñÈ¡·¢ËÍ×Ö½Ú
+	std::size_t GetSentBytes() const;                           //è·å–å‘é€å­—èŠ‚
 
-	void SetSentBytes(std::size_t value);                       //ÉèÖÃ·¢ËÍ×Ö½Ú
+	void SetSentBytes(std::size_t value);                       //è®¾ç½®å‘é€å­—èŠ‚
 
-	std::size_t GetTotalBytes() const;                          //»ñÈ¡È«²¿×Ö½Ú
+	std::size_t GetTotalBytes() const;                          //è·å–å…¨éƒ¨å­—èŠ‚
 
-	void SetTotalBytes(std::size_t value);                      //ÉèÖÃÈ«²¿×Ö½Ú
+	void SetTotalBytes(std::size_t value);                      //è®¾ç½®å…¨éƒ¨å­—èŠ‚
 
-	Overlapped* GetConnectOverlapped() const;                   //Á´½ÓÖØµş½á¹¹
+	Overlapped* GetConnectOverlapped() const;                   //é“¾æ¥é‡å ç»“æ„
 
-	Overlapped* GetAcceptOverlapped() const;                    //½ÓÊÜÖØµş½á¹¹
+	Overlapped* GetAcceptOverlapped() const;                    //æ¥å—é‡å ç»“æ„
 
-	Overlapped* GetReadOverlapped() const;                      //¶ÁÖØµş½á¹¹
+	Overlapped* GetReadOverlapped() const;                      //è¯»é‡å ç»“æ„
 
-	Overlapped* GetWriteOverlapped() const;                     //Ğ´ÖØµş½á¹¹
+	Overlapped* GetWriteOverlapped() const;                     //å†™é‡å ç»“æ„
 
 private:
-	class  Implementation;										//ÊµÏÖÀà
+	class  Implementation;										//å®ç°ç±»
 	std::unique_ptr<Implementation> _impl;			
 };
 
-class Connection::Implementation								//ÊµÏÖÀà¶¨Òå£¬Ç¶Ì×¹ØÏµ
+class Connection::Implementation								//å®ç°ç±»å®šä¹‰ï¼ŒåµŒå¥—å…³ç³»
 {
 public:
 	Implementation(const SOCKET& socket, Connection* owner);

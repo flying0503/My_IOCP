@@ -1,4 +1,4 @@
-#ifndef _IocpServer_h_
+ï»¿#ifndef _IocpServer_h_
 #define _IocpServer_h_
 #include <WinSock2.h>
 #include <Windows.h>
@@ -41,7 +41,7 @@ public:
 	bool _wsa_inited;
 	HANDLE _completion_port;
 	SOCKET _socket;
-	LPFN_ACCEPTEX _acceptex_func;	//ÓÃÓÚ±£´æAcceptEx()µÄÖ¸Õë
+	LPFN_ACCEPTEX _acceptex_func;	//ç”¨äºä¿å­˜AcceptEx()çš„æŒ‡é’ˆ
 };
 
 #endif

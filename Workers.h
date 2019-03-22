@@ -1,4 +1,4 @@
-#ifndef _WORKERS_
+﻿#ifndef _WORKERS_
 #define _WORKERS_
 
 #include <mswsock.h>
