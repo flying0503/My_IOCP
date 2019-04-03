@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="connection.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="IocpServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -34,9 +31,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="connection.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="IocpServer.h">
       <Filter>头文件</Filter>
     </ClInclude>

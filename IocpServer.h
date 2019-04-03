@@ -5,7 +5,6 @@
 #include <io.h>
 #include <thread>
 #include <iostream>
-#include "connection.h"
 #include "SocketExFnsHunter.h"
 #pragma comment(lib,"ws2_32.lib")
 
@@ -32,15 +31,15 @@ public:
 
 	void Mainloop();
 
-	void AsyncRead(const Connection* conn);
+	void AsyncRead();
 
-	void AsyncWrite(const Connection* conn, void* data, std::size_t size);
+	void AsyncWrite();
 
 
 public:
-	bool _wsa_inited;
-	HANDLE _completion_port;
-	SOCKET _socket;
+	bool _wsa_inited;				//_wsa初始化标志位
+	HANDLE _completion_port;		//完成端口key
+	SOCKET _socket;					//服务器套接字
 	LPFN_ACCEPTEX _acceptex_func;	//用于保存AcceptEx()的指针
 };
 

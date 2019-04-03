@@ -1,5 +1,4 @@
 ﻿#include<WinSock2.h>
-#include"connection.h"
 #define ReadBufferSize 1024
 struct Overlapped
 {
@@ -17,14 +16,4 @@ struct Overlapped
 	WSABUF wsa_buf;
 
 	SOCKET _accepted_socket;
-
-	Connection* connection;
 };
-
-inline Overlapped* CreateOverlapped(Overlapped::Type type)
-{
-	Overlapped* overlapped = new Overlapped;
-	memset(overlapped, 0, sizeof(Overlapped));
-	overlapped->type = type;
-	return overlapped;
-}
