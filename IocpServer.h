@@ -21,8 +21,6 @@ public:
 	int WinSockInit();
 
 	int InitSocket();
-	
-	int Accept();
 
 	int Bind(const char* ip,unsigned short port);
 
@@ -34,8 +32,15 @@ public:
 
 	void AsyncRead(const Connection* conn);
 
+	char *DoRead(Overlapped *overlapped, DWORD &bytes_transferred);
+
 	void AsyncWrite(const Connection* conn, void* data, std::size_t size);
 
+	bool DoWrite(Overlapped * overlapped, DWORD &bytes_transferred);
+
+	int PostAccept();
+
+	int DoAccept(Overlapped *overlapped);
 
 public:
 	bool _wsa_inited;

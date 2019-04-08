@@ -33,8 +33,7 @@ IocpServer::IocpServer()
 
 
 IocpServer::~IocpServer()
-{
-}
+{}
 
 int IocpServer::Init(const char* ip, unsigned short port,unsigned int nListen)
 {
@@ -63,9 +62,6 @@ int IocpServer::Init(const char* ip, unsigned short port,unsigned int nListen)
 
 		if ((ret = Listen(nListen)) == -1)			//监听Socket
 			break;
-
-		//if (Accept() == -1)							//接受客户端联入
-		//break;
 		
 		//获取acceptex函数地址，只需要获取一次就可以了
 		SocketExFnsHunter _socketExFnsHunter;
@@ -73,6 +69,8 @@ int IocpServer::Init(const char* ip, unsigned short port,unsigned int nListen)
 
 		Workers *_workers = new Workers(this);
 		_workers->Start();
+
+		PostAccept();		//开始等待链接
 
 	} while (0);
 	return ret;
@@ -146,36 +144,10 @@ int IocpServer::Listen(unsigned int nListen)
 	return 0;
 }
 
-int IocpServer::Accept()
+int IocpServer::PostAccept()
 {
 	int ret = -1;
 	do{
-#if 0  //不需要获取AcceptEx()函数指针，由SocketExFnsHunter完成
-		//这里我们不用WSAAccept，
-		//因为我们需在查询完成端口的时候判断出，是accept、read、connect和write类型
-
-		//WSAIoctl获取acceptex的函数地址
-		//存放AcceptEx函数的指针
-		LPFN_ACCEPTEX _acceptex_func;
-		GUID acceptex_guid = WSAID_ACCEPTEX;
-		DWORD bytes_returned;
-		ret = WSAIoctl
-			(
-			_socket, SIO_GET_EXTENSION_FUNCTION_POINTER,
-			&acceptex_guid, sizeof(acceptex_guid),
-			&_acceptex_func, sizeof(_acceptex_func),
-			&bytes_returned, NULL, NULL
-			);
-		if (ret != 0)
-		{
-			ret = -1;
-			fprintf(stderr, "获取AcceptEx 函数地址失败\n");
-			break;
-		}
-#endif // 0  //不需要获取AcceptEx()函数指针，由SocketExFnsHunter完成
-
-		
-
 		SOCKET accepted_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);			//客户端套接字
 		if (accepted_socket == INVALID_SOCKET)
 		{
@@ -215,6 +187,14 @@ int IocpServer::Accept()
 	return ret;
 }
 
+int IocpServer::DoAccept(Overlapped *overlapped)
+{
+	int ret = -1;
+	fprintf(stderr, "新客户端加入\n");
+	fprintf(stderr, "client:%d\n", overlapped->connection->GetSocket());
+	return 0;
+}
+
 void IocpServer::Run(const char* ip, unsigned short port, unsigned int nListen = 5)
 {
 	if (Init(ip, port, nListen) == -1)
@@ -228,102 +208,6 @@ void IocpServer::Run(const char* ip, unsigned short port, unsigned int nListen =
 
 void IocpServer::Mainloop()
 {
-#if 0
-	DWORD bytes_transferred;
-	ULONG_PTR completion_key;
-	DWORD Flags = 0;
-	Overlapped* overlapped = nullptr;
-
-	while (1)
-	{
-		//从队列中获取请求，检查完成端口状态用于接受网络操作的到达
-		bool bRet = GetQueuedCompletionStatus(
-			_completion_port,								//完成端口句柄，类成员
-			&bytes_transferred,								//操作完成后返回字节数
-			&completion_key,								//操作完成后存放的key
-			reinterpret_cast<LPOVERLAPPED*>(&overlapped),	//重叠结构
-			INFINITE);										//等待时间，设为无
-
-		if (bRet == false)
-		{
-			//客服端直接退出，没有调用closesocket正常关闭连接
-			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
-			{
-				//客户端断开
-				fprintf(stderr, "client:%d 断开\n", overlapped->connection->GetSocket());
-				delete overlapped->connection;
-				overlapped = nullptr;
-				continue;
-			}
-
-		}
-		
-		if (overlapped->type == Overlapped::Accept_type)
-		{
-			//acceptex完成了操作，所以我们还要将其关联到完成端口。
-			//这里先不改造，等后面我们会进行优化改造
-			//我们也可以添加多个accept到完成端口
-			Accept();
-			//新客户端连接
-			fprintf(stderr, "新客户端加入\n");
-			fprintf(stderr, "client:%d\n", overlapped->connection->GetSocket());
-			AsyncRead(overlapped->connection);
-			continue;
-		}
-
-		if (bytes_transferred == 0)
-		{
-			//客户端断开
-			fprintf(stderr, "client:%d 断开\n", overlapped->connection->GetSocket());
-			delete overlapped->connection;
-			overlapped = nullptr;
-			continue;
-		}
-
-		if (overlapped->type == Overlapped::Type::Read_type)
-		{
-			// 异步读完成
-			char* value = reinterpret_cast<char*>(overlapped->connection->GetReadBuffer());
-			value[bytes_transferred] = '\0';	//形成标准字符串
-			fprintf(stderr, "client:%d , msg:%s\n",overlapped->connection->GetSocket(), value);
-			//回发功能，给客户端发送回去
-			AsyncWrite(overlapped->connection, value, bytes_transferred);
-			continue;
-		}
-
-		if (overlapped->type == Overlapped::Type::Write_type)
-		{
-			Connection *conn = overlapped->connection;
-			conn->SetSentBytes(conn->GetSentBytes() + bytes_transferred);
-			
-			//判断是否只发送了一部分
-			if (conn->GetSentBytes() < conn->GetTotalBytes())
-			{
-				//将剩余部分再发送
-				overlapped->wsa_buf.len = conn->GetTotalBytes() - conn->GetSentBytes();
-				overlapped->wsa_buf.buf = reinterpret_cast<CHAR*>(conn->GetWriteBuffer()) + conn->GetSentBytes();
-
-				int send_result = WSASend(
-					conn->GetSocket(),								//客户端链接的套接字
-					&overlapped->wsa_buf,							//wsa缓冲区
-					1,												//wsa缓冲区数目
-					&bytes_transferred,								//传送字节
-					0,												//标志位，设为零
-					reinterpret_cast<LPWSAOVERLAPPED>(overlapped),	//重叠结构
-					NULL);											//操作完成后的调用函数指针，设为空
-				
-				if (!(send_result == NULL || (send_result == SOCKET_ERROR && WSAGetLastError() == WSA_IO_PENDING)))
-					fprintf(stderr, "发送数据失败\n");
-			}
-			else
-			{
-				//发送完成，等待读取
-				AsyncRead(overlapped->connection);
-			}
-		}
-	}
-#endif //现有Workers线程去处理业务，主循环空闲
-
 	while (true)
 	{
 
@@ -353,6 +237,14 @@ void IocpServer::AsyncRead(const Connection* conn)
 		fprintf(stderr, "接收数据失败<AsyncRead>失败\n");
 }
 
+char *IocpServer::DoRead(Overlapped * overlapped, DWORD &bytes_transferred)
+{
+	char* value = reinterpret_cast<char*>(overlapped->connection->GetReadBuffer());
+	value[bytes_transferred] = '\0';	//形成标准字符串
+	fprintf(stderr, "client:%d , msg:%s\n", overlapped->connection->GetSocket(), value);
+	return value;
+}
+
 void IocpServer::AsyncWrite(const Connection* conn, void* data, std::size_t size)
 {
 	Connection *mutable_conn = const_cast<Connection*>(conn);				//不同的链接
@@ -370,6 +262,7 @@ void IocpServer::AsyncWrite(const Connection* conn, void* data, std::size_t size
 	overlapped->wsa_buf.buf = reinterpret_cast<CHAR*>(mutable_conn->GetWriteBuffer());
 
 	DWORD bytes;
+
 	//异步写请求投递
 	int send_result = WSASend(mutable_conn->GetSocket(),
 		&overlapped->wsa_buf, 1,
@@ -379,4 +272,37 @@ void IocpServer::AsyncWrite(const Connection* conn, void* data, std::size_t size
 
 	if (!(send_result == 0 || (send_result == SOCKET_ERROR && WSAGetLastError() == WSA_IO_PENDING)))
 		fprintf(stderr, "发送数据失败\n");
+}
+
+bool IocpServer::DoWrite(Overlapped * overlapped, DWORD &bytes_transferred)
+{
+	Connection *conn = overlapped->connection;
+	conn->SetSentBytes(conn->GetSentBytes() + bytes_transferred);
+
+	//判断是否只发送了一部分
+	if (conn->GetSentBytes() < conn->GetTotalBytes())
+	{
+		//将剩余部分再发送
+		overlapped->wsa_buf.len = conn->GetTotalBytes() - conn->GetSentBytes();
+		overlapped->wsa_buf.buf = reinterpret_cast<CHAR*>(conn->GetWriteBuffer()) + conn->GetSentBytes();
+		//投递剩余部分请求
+		int send_result = WSASend(
+			conn->GetSocket(),								//客户端链接的套接字
+			&overlapped->wsa_buf,							//wsa缓冲区
+			1,												//wsa缓冲区数目
+			&bytes_transferred,								//传送字节
+			0,												//标志位，设为零
+			reinterpret_cast<LPWSAOVERLAPPED>(overlapped),	//重叠结构
+			NULL);											//操作完成后的调用函数指针，设为空
+
+		if (!(send_result == NULL || (send_result == SOCKET_ERROR && WSAGetLastError() == WSA_IO_PENDING)))
+			fprintf(stderr, "发送数据失败\n");
+		//未全部发送完成，返回标志位
+		return false;
+	}
+	else
+	{
+		//发送完成，返回标志位
+		return true;
+	}
 }
