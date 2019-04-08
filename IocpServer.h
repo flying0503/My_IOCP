@@ -45,7 +45,7 @@ public:
 public:
 	bool _wsa_inited;
 	HANDLE _completion_port;
-	SOCKET _socket;
+	SOCKET _socket;					//服务器套接字
 	LPFN_ACCEPTEX _acceptex_func;	//用于保存AcceptEx()的指针
 };
 

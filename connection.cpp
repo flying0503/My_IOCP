@@ -1,10 +1,8 @@
 ﻿#include "connection.h"
 #include "overlapped.h"
 
-
-
 Connection::Implementation::Implementation(const SOCKET& socket, Connection* owner)
-	: _socket(socket)
+	: client_socket(socket)
 	, _connect_overlapped(CreateOverlapped(Overlapped::Connect_type))
 	, _accept_overlapped(CreateOverlapped(Overlapped::Accept_type))
 	, _read_overlapped(CreateOverlapped(Overlapped::Read_type))
@@ -22,8 +20,8 @@ Connection::Implementation::Implementation(const SOCKET& socket, Connection* own
 
 Connection::Implementation::~Implementation()
 {
-	if (_socket)
-		closesocket(_socket);
+	if (client_socket)
+		closesocket(client_socket);
 }
 
 Connection::Connection(const SOCKET& socket)
@@ -102,5 +100,5 @@ std::size_t Connection::GetReadBufferSize()
 }
 SOCKET& Connection::GetSocket()
 {
-	return _impl->_socket;
+	return _impl->client_socket;
 }

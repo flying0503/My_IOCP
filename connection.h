@@ -54,7 +54,7 @@ public:
 	~Implementation();
 
 public:
-	SOCKET _socket;
+	SOCKET client_socket;
 
 	char _read_buffer[ReadBufferSize];
 

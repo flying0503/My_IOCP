@@ -16,9 +16,9 @@ struct Overlapped
 
 	WSABUF wsa_buf;
 
-	SOCKET _accepted_socket;
-
 	Connection* connection;
+
+	//SOCKET _accepted_socket;
 };
 
 inline Overlapped* CreateOverlapped(Overlapped::Type type)
