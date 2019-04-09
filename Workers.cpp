@@ -48,7 +48,7 @@ void Workers::Start()
 		CloseHandle(ThreadHandle);
 	}
 
-	printf("启动线程数：%d", SystemInfo.dwNumberOfProcessors * 2);
+	printf("启动线程数：%d\n", SystemInfo.dwNumberOfProcessors * 2);
 }
 
 void Workers::ThreadProc()		//业务函数，Workers线程处理业务，主循环空闲

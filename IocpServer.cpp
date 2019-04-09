@@ -70,8 +70,10 @@ int IocpServer::Init(const char* ip, unsigned short port,unsigned int nListen)
 		Workers *_workers = new Workers(this);
 		_workers->Start();
 
-		PostAccept();		//开始等待链接
-
+		for (size_t i = 0; i < 10; i++)
+		{
+			PostAccept();		//开始等待链接
+		}
 	} while (0);
 	return ret;
 
@@ -182,14 +184,13 @@ int IocpServer::PostAccept()
 		// 将accept_socket关联到完成端口
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(accepted_socket), _completion_port, 0, 0);
 
-		new_connection.release();
+		new_connection.release();//指针指控，用于接收下一次新建的new_connection
 	} while (0);
 	return ret;
 }
 
 int IocpServer::DoAccept(Overlapped *overlapped)
 {
-	int ret = -1;
 	fprintf(stderr, "新客户端加入\n");
 	fprintf(stderr, "client:%d\n", overlapped->connection->GetSocket());
 	return 0;
